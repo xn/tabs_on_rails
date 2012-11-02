@@ -76,6 +76,24 @@ module TabsOnRails
 
     module ClassMethods
 
+      def tab_map
+        @tab_map ||= Hash.new { |h,k| h[k] = [] }
+      end
+
+      def tabs_for(action_name)
+        tab_map.inject(Hash.new { |h,k| h[k] = [] }) do |map, (ns, tabs)|
+          matches = tabs.reject do |tab|
+            (tab[:options] && tab[:options][:only] && tab[:options][:only].find { |i| i.to_sym == action_name.to_sym }.nil?) ||
+             (tab[:options] && tab[:options][:except] && !tab[:options][:except].find { |i| i.to_sym == action_name.to_sym }.nil?)
+          end
+          map[ns] += matches and map
+        end.inject([]) do |list, (ns, tabs)|
+          list += tabs.map do |tab|
+            {namespace: ns, name: tab[:name]}
+          end
+        end
+      end
+
       # Sets the value for current tab to given name.
       #
       #   set_tab :foo
@@ -102,6 +120,8 @@ module TabsOnRails
       def set_tab(*args)
         options = args.extract_options!
         name, namespace = args
+
+        tab_map[namespace || :default] << {name: name, options: options}
 
         before_filter(options) do |controller|
           controller.send(:set_tab, name, namespace)
