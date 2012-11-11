@@ -18,7 +18,7 @@ module TabsOnRails
       helper_method :current_tab, :current_tab?
     end
 
-    
+
     protected
 
     # Sets the value for current tab to given name.
@@ -159,7 +159,7 @@ module TabsOnRails
       #
       # Now, if the action belongs to <tt>DashboardController</tt>,
       # the template will automatically render the following HTML code.
-      # 
+      #
       #   <ul>
       #     <li><a href="/">Homepage</a></li>
       #     <li class="current"><span>Dashboard</span></li>
@@ -179,7 +179,7 @@ module TabsOnRails
       # === Customizing a Tab
       #
       # You can pass a hash of options to customize the style and the behavior of the tab item.
-      # Behind the scenes, each time you create a tab, the <tt>#tab_for</tt> 
+      # Behind the scenes, each time you create a tab, the <tt>#tab_for</tt>
       # method is invoked.
       #
       #   <%= tabs_tag do |tab| %>
@@ -203,7 +203,7 @@ module TabsOnRails
       #
       # === Customizing open_tabs and close_tabs
       #
-      # The open_tabs and the close_tabs methods can be customized 
+      # The open_tabs and the close_tabs methods can be customized
       # with the <tt>:open_tabs</tt> and <tt>:close_tabs</tt> option.
       #
       #   <%= tabs_tag :open_tabs => { :id => "tabs", :class => "cool" } do |tab| %>
@@ -222,6 +222,18 @@ module TabsOnRails
       #
       def tabs_tag(options = {}, &block)
         Tabs.new(self, { :namespace => :default }.merge(options)).render(&block)
+      end
+
+      def tb_nav(options = {}, &block)
+        Tabs.new(self, { :namespace => :default, :builder => TabsOnRails::Tabs::BootstrapNavBuilder, :open_tabs => {:class => 'nav'}}.merge(options)).render(&block)
+      end
+
+      def tb_nav_pills(options = {}, &block)
+        tb_nav(:open_tabs => {:class => 'nav nav-pills'}, &block)
+      end
+
+      def tb_nav_tabs(options = {}, &block)
+        tb_nav(:open_tabs => {:class => 'nav nav-tabs'}, &block)
       end
     end
 

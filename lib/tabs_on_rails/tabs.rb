@@ -9,6 +9,7 @@
 
 require 'tabs_on_rails/tabs/builder'
 require 'tabs_on_rails/tabs/tabs_builder'
+require 'tabs_on_rails/tabs/bootstrap_nav_builder'
 
 
 module TabsOnRails
